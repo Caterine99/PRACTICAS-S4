@@ -41,3 +41,21 @@ with(cancer, Hist(age, scale="frequency", breaks="Sturges", col="darkgray"))
 ```
 
 **4) Calcula los principales estadísticos descriptivos de la variable**
+
+Para obtener un resumen de los principales estadísticos de la variable “age”, el procedimiento a seguir es el siguiente; en el Menú Estadísticos elegimos la opción Resúmenes, y dentro del sub Menú que se muestra dar clic en Resúmenes numéricos, tal y como se muestra en la figura siguiente. **Note que al elegir la opción Conjunto de datos activo, nos mostrarán los principales estadísticos de todas las variables en el conjunto de datos.**
+
+```{r}
+
+library(abind, pos=18)
+library(e1071, pos=19)
+
+numSummary(cancer[,"age", drop=FALSE], statistics=c("mean", "sd", "IQR", "quantiles"), quantiles=c(0,.25,.5,.75,1))
+```
+
+**5) Otros gráficos (Diagramas de cajas)**
+Finalmente si lo que deseamos es obtener los diagramas de cajas, el procedimiento es el siguiente. En el Menú Gráficas seleccionamos la opción Diagrama de caja, y luego finalmente le indicamos a qué variable debe graficar, tal y como se muestra en la figura a la derecha
+
+```{r}
+Boxplot( ~ age, data=cancer, id=list(method="y"))
+```
+
