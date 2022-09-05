@@ -1,0 +1,43 @@
+---
+output:
+  pdf_document: default
+---
+<!-- R Commander Markdown Template -->
+
+UNIDAD 2: Práctica 08-Análisis estadístico de datos univariados cuantitativos en R.Usando la interfaz gráfica (R-Commander)
+=======================
+
+### user
+
+### `r as.character(Sys.Date())`
+
+Para ilustrar como llevar a cabo un análisis estadístico univariado con la interfaz gráfica de R, se utilizará el conjunto de datos “cancer” contenidos en el paquete survival. Son datos propios de R, y pueden utilizarse con toda libertad.
+
+Los datos corresponden a la sobrevivencia de pacientes con cáncer avanzado tomados de North Central Cancer Treatment Group. Puede obtener más información sobre el conjunto de datos digitando en R la siguiente instrucción, ?cancer.
+
+**ANÁLISIS ESTAD?STICO DE LOS DATOS**
+
+
+```{r echo=FALSE}
+# incluya este fragmento de c?digo literalmente para especificar las opciones
+knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
+library(Rcmdr)
+library(car)
+library(RcmdrMisc)
+```
+
+**2)Cargando el conjunto de datos al espacio de trabajo.**
+
+Para poder cargar los datos al área de trabajo y poder trabajar con ellos y realizar cualquier análisis estadístico desde R-Commander, el procedimiento sería el siguiente: en el Menú Datos, se elige la opción Conjunto de datos en paquetes, el Menú desplegable que se muestra al elegir Leer conjunto de datos ……..
+```{r}
+data(cancer, package="survival")
+```
+
+**3) Crea el histograma de frecuencias**
+
+Para crear un histograma de la variable “age”, el procedimiento es el siguiente: En el Menú Gráficas seleccionamos la opción Histograma, tal y como se muestra en la figura siguiente.
+```{r}
+with(cancer, Hist(age, scale="frequency", breaks="Sturges", col="darkgray"))
+```
+
+**4) Calcula los principales estadísticos descriptivos de la variable**
