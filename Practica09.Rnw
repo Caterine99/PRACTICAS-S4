@@ -111,9 +111,25 @@ t.test(income~marital, alternative='two.sided', conf.level=.95,var.equal=FALSE, 
 
 \section{CUANTITATIVA VR CUALITATIVA}
 <<>>=
+
+# 1)Lectura de datos
+# 2)Muestra un resumen de principales estadísticos de las variables.
 knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
 
 estaturas<-read.table("C:/Users/user/OneDrive/Paquete R/PRACTICAS-S4/estaturas.dat",header=TRUE, stringsAsFactors=TRUE, sep="",n.strings="NA", dec=".", strip.white=TRUE)
+
+
+# 3)Elabora un gráfico de dispersión para analizar alguna relación entre las variables.
+scatterplot(X0.000000000e.000~X7.880000000e.001, regLine=FALSE, smooth=FALSE, boxplots=FALSE, data=estaturas)
+
+# 4) Aplica la función lm() para encontrar el modelo lineal que se ajusta a los datos.
+
+RegModel.2<-lm(X7.880000000e.001~X0.000000000e.000, data=estaturas)
+summary(RegModel.2)
+
+
+# 5) Efectúa una análisis de variabilidad del modelo o descomposición de la varianza.
+Anova(RegModel.2, type="II")
 @
 
 \end{document}
