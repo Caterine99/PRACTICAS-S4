@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{vmargin}
+\setpapersize{A4}
+\setmargins{2.5cm}       % margen izquierdo
+{1.5cm}                  % margen superior
+{16.5cm}                 % anchura del texto
+{23.42cm}                % altura del texto
+{10pt}                   % altura de los encabezados
+{1cm}                    % espacio entre el texto y los encabezados
+{0pt}                    % altura del pie de página
+{2cm}                    % espacio entre el texto y el pie de página
+
+
+\begin{document}
+
+\textbf{UNIDAD 2: Práctica 09-Análisis de una variable bidimensional categórica. Usando la interfaz gráfica (R-Commander)}
+\vspace{1cm}\\
+
+\section{CUALITATIVA VR CUALITATIVA}
+
+Para ilustrar como realizar un análisis estadístico bivariado usando la interfaz gráfica de R, se utilizará la información contendía el archivo “demo.sav”; el cual contiene información de variables cualitativas y cuantitativas. Se ilustrará en este documento como realizar un análisis estadístico bivariado cuando las dos variables son cualitativas.\\
+
+\textbf{1) Activa tu directorio de trabajo.}
+<<>>=
+getwd()
+setwd("C:/Users/user/OneDrive/Paquete R/PRACTICAS-S4")
+@
+
+\textbf{2) Lectura del conjunto de datos.}
+El procedimiento para cargar el conjunto de datos es el que se ha venido mencionando. Lo primero que debemos hacer es elegir la opción Importar datos del Menú Datos. y dentro de éste elegir la opción desde datos SPSS… tal y como se muestra en la figura. Debemos simplemente elegir el archivo demo.sav.\\
+
+<<>>=
+library(Rcmdr)
+library(car)
+library(RcmdrMisc)
+
+
+demo <- readSPSS("C:/Users/user/OneDrive/Paquete R/PRACTICAS-S4/demo.sav",  rownames=FALSE, stringsAsFactors=TRUE, tolower=FALSE)
+@
+
+
+Se trabajará con la variable “marital”, que representa la situación marital de las personas (solamente se distinguen entre Casadas y no Casadas); y con la variable “inccat”, la cual representa la categoría del ingreso en miles de dólares\\
+
+
+\textbf{3) Crea una tabla de contigencia o de doble entrada.}\\
+El procedimiento para realizar una tabla de contingencia en la interfaz gráfica es el siguiente: en Menú Estadísticos se elige la opción Tablas de contingencia, y dentro de este se selecciona Tabla de doble entrada.
+
+<<>>=
+# Tablas de contingencia de dos vías marital, inccat
+local({
+  .Table <- xtabs(~marital+inccat, data=demo)
+  cat("\nFrequency table:\n")
+  print(.Table)
+  .Test <- chisq.test(.Table, correct=FALSE)
+  print(.Test)
+})
+@
+
+\section{CUALITATIVA VR CUANTITATIVA.}
+
+
+Para ilustrar como realizar un análisis estadístico bidimensional entre una variable cualitativa y una cuantitativa se trabajará con la variable “marital”, que representa la situación marital de las personas (solamente se distinguen entre Casadas y no Casadas); y con la variable “income”, la cual representa el ingreso económico.\\
+
+\textbf{1) Dibuja un gráfico horizontal de puntos para los tres procesos.}\\
+Podemos realizar un gráfico de puntos, en el cual podemos observar gráficamente si la variable income se comporta de manera diferente en cada uno de los niveles de la variable marital. El procedimiento para realizar el gráfico es el siguiente.
+
+<<>>=
+# Gráfico de puntos income
+with(demo, Dotplot(income, bin=FALSE))
+@
+
+\textbf{2) Muestra un resumen estadístico para los estados maritales.}
+El procedimiento es como sigue: en el Menú Estadísticos seleccionar la opción Resúmenes, y dentro
+del sub Menú que aparecerá seleccionar la opción Resúmenes numéricos
+<<>>=
+# Resúmenes numéricos: demo
+numSummary(demo[,"age", drop=FALSE], statistics=c("mean", "sd", "IQR", "quantiles"), quantiles=c(0,.25,.5,.75,1))
+@
+
+\textbf{3) Dibuja un gráfico de cajas (box-plot) para los estado maritales.}\\
+Para realizar un diagrama de caja de una variable cuantitativa en los diferentes niveles de una segunda variable la cual es cualitativa, el procedimiento es como sigue. En el Menú Gráficas seleccionamos la opción Diagrama de cajas
+
+<<>>=
+
+# Diagrama de caja: ~ income
+Boxplot( ~ income, data=demo, id=list(method="y"))
+
+@
+
+\textbf{4) Gráficas de medias.}\\
+También en algunos casos es útil realizar el gráfico de las medias, el cual nos da mayor información a los diagramas de puntos. Para obtenerlo el procedimiento es: en el Menú Gráficas seleccionamos la opción Gráficas de las medias, tal y como se muestra en la figura. Al realizar este procedimiento deberá aparecernos una ventana en la cual debemos especificar la variable explicativa income (nuestra variable cuantitativa), y los factores, es decir, la variable marital (la cual es cualitativa).
+
+<<>>=
+# Gráfica de las medias: income by marital
+with(demo, plotMeans(income, marital, error.bars="se", connect=TRUE))
+@
+
+\textbf{5) Prueba de comparación de medias (asumiendo normalidad).}\\
+Se utiliza para contrastar las siguientes hipótesis:\\
+$H_{0}:\mu_{A}=\mu_{B}$ , no existe diferencias de los ingresos para los estados maritales.\\
+$H_{1}:\mu_{A}$ $\neq \mu_{B}$ , si existe diferencia.\\
+
+El procedimiento para llevar a cabo tal contraste de hipótesis es mediante la prueba t; en el Menú Estadísticos seleccionamos la opción Medias, y dentro de este seleccionamos la opción Test t para muestras independientes, tal y como se muestra en la siguiente figura. En el cuadro resultante únicamente debemos verificar si explicativa income (que es cuantitativa) y el factor marital (que es cualitativa); definimos el tipo de prueba (una o dos colas), y especificamos si las varianzas son o no iguales.
+
+<<>>=
+# Test t para muestras independientes: income~marital
+
+t.test(income~marital, alternative='two.sided', conf.level=.95,var.equal=FALSE, data=demo)
+@
+
+\section{CUANTITATIVA VR CUALITATIVA}
+<<>>=
+knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
+
+estaturas<-read.table("C:/Users/user/OneDrive/Paquete R/PRACTICAS-S4/estaturas.dat",header=TRUE, stringsAsFactors=TRUE, sep="",n.strings="NA", dec=".", strip.white=TRUE)
+@
+
+\end{document}
